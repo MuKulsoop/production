@@ -4,10 +4,13 @@ import Connection from "./db/db.js";
 import router from "./routes/routes.js";
 import cors from "cors"
 import bodyParser from "body-parser"
+import path from "path"
+
+
 const app = express();
 
 dotenv.config();
-
+const __dirname = path.resolve();
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => console.log(`Server is running at PORT ${PORT}`));
@@ -15,11 +18,14 @@ app.use(cors());
 app.use(bodyParser.json({extended : true}))
 app.use('/', router)
 
-if( process.env.NODE_ENV === 'production' ){
-    app.use(express.static("client/build"))
-}
 
+app.use(express.static( path.join(__dirname , "./client/build")));
 
+app.get('*', function ( _ , res) {
+    res.sendFile(path.join(__dirname, "./client/build/index.html"), function(err){
+        res.status(500).send(err);
+    })
+})
 
 
 const User = process.env.DB_USERNAME

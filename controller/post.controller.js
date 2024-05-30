@@ -1,4 +1,4 @@
-import { response } from "express"
+
 import Post from "../models/post.model.js"
 
 export const createPost = async ( request, response) => {
